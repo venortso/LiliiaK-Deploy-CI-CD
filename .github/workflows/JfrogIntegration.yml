@@ -19,7 +19,7 @@ jobs:
          uses: actions/setup-node@v3
            
        - name: Set CLI Config
-         run: jf npm-config --global=true --repo-resolve=npm-remote --repo-deploy=1309-npm-local
+         run: jf npm-config --global=true --repo-resolve=kryvelova-npm --repo-deploy=kryvelova-npm
            
        - name: Install Deps
          run: jf npm install
