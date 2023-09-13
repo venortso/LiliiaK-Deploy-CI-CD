@@ -3,42 +3,34 @@ on: push
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup JFrog CLI
-        uses: jfrog/setup-jfrog-cli@v3
-        env:
-          # JFrog platform url (for example: https://acme.jfrog.io)
-          JF_URL: ${{ secrets.JF_URL }}
-
-          # JFrog Platform access token
-          JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
-          run: |
-            jf rt ping
-
-      - name: Setup Node npm
-        uses: actions/setup-node@v3
-           
-      - name: Set CLI Config
-        run: jf npm-config --global=true --repo-resolve=test-npm --repo-deploy=tes1-npm
-           
-      - name: Install Deps
-        run: jf npm install --build-name=bootstrap --build-number=2.0.0
-           
-      - name: Run tests
-        run: npm test
+     runs-on: ubuntu-latest
+       
+     steps:
+       - name: Checkout
+         uses: actions/checkout@v3
          
-      - name: Publish
-        run: jf npm publish
+       - name: Setup JFrog CLI
+         uses: jfrog/setup-jfrog-cli@v3
+         env:  
+           JF_URL: ${{ secrets.JF_URL }}
+           JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
+           
+       - name: Setup Node npm
+         uses: actions/setup-node@v3
+           
+       - name: Set CLI Config
+         run: jf npm-config --global=true --repo-resolve=1309-npm --repo-deploy=1309-npm
+           
+       - name: Install Deps
+         run: jf npm install --buid-name=github-actions-liliia --build-number=${{ github.run_number }}
          
-      - name: Publish Build info With JFrog CLI
-        run: |
+       - name: Publish
+         run: jf npm publish --buid-name=github-actions-liliia --build-number=${{ github.run_number }}
+         
+       - name: Publish Build info With JFrog CLI
+         run: |
           # Collect environment variables for the build
-          jf rt build-collect-env
+          jf rt build-collect-env --buid-name=github-actions-liliia --build-number=${{ github.run_number }}
           # Collect VCS details from git and add them to the build
           jf rt build-add-git
           # Publish build info
