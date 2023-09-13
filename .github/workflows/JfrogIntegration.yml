@@ -19,7 +19,7 @@ jobs:
          uses: actions/setup-node@v3
            
        - name: Set CLI Config
-         run: jf npm-config --global=true --repo-resolve=venortso-npm-challenge-remote --repo-deploy=venortso-npm-challenge-local
+         run: jf npm-config --global=true --repo-resolve=vito-001-npm --repo-deploy=vito-001-npm
            
        - name: Install Deps
          run: jf npm install
