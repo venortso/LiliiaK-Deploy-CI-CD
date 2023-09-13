@@ -1,6 +1,6 @@
 console.log("Hello Demo!");
 
-import moment from 'moment';
+var moment = require('moment');
 var date = moment().format('MMMM Do YYYY, h:mm:ss a');
 
 console.log(date);
