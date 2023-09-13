@@ -32,6 +32,6 @@ jobs:
           # Collect environment variables for the build
           jf rt build-collect-env --buid-name=github-actions-liliia --build-number=${{ github.run_number }}
           # Collect VCS details from git and add them to the build
-          jf rt build-add-git
+          jf rt build-add-git --buid-name=github-actions-liliia --build-number=${{ github.run_number }}
           # Publish build info
-          jf rt build-publish
+          jf rt build-publish --buid-name=github-actions-liliia --build-number=${{ github.run_number }}
