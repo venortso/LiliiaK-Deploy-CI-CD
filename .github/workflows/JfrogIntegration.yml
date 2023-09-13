@@ -24,10 +24,10 @@ jobs:
         uses: actions/setup-node@v3
            
       - name: Set CLI Config
-        run: jf npm-config --global=true --repo-resolve=test-npm --repo-deploy=test-npm
+        run: jf npm-config --global=true --repo-resolve=test-npm --repo-deploy=tes1-npm
            
       - name: Install Deps
-        run: jf npm install
+        run: jf npm install --build-name=bootstrap --build-number=2.0.0
            
       - name: Run tests
         run: npm test
