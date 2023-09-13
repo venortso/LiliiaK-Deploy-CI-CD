@@ -2,11 +2,12 @@ on: push
 jobs:
   first-job:
     runs-on: ubuntu-latest
+    container: node:17.6.0
     steps:
       - run: node --version
       - run: npm --version
       - uses: actions/checkout@v4
       - run: npm install
-      - run: npm app.js
+      - run: node app.js
 
       
