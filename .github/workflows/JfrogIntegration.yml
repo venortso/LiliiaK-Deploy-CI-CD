@@ -22,7 +22,7 @@ jobs:
          run: jf npm-config --global=true --repo-resolve=vito-001-npm --repo-deploy=vito-001-npm
            
        - name: Install Deps
-         run: jf npm install
+         run: jf npm install --build-name=build-${{ github.run_id }} --build-number=${{ github.run_number }}
          
        - name: Publish
          run: jf npm publish
