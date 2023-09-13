@@ -1,5 +1,6 @@
 {
     "name": "simple",
+    "version": "1.0.0",
     "main": "app.js",
     "dependencies": {
         "moment": "^2.29.4"

@@ -22,10 +22,10 @@ jobs:
          run: jf npm-config --global=true --repo-resolve=vito-001-npm --repo-deploy=vito-001-npm
            
        - name: Install Deps
-         run: jf npm install --build-name=build-vito-001 --build-number=${{ github.run_number }}
+         run: jf npm install --build-name=build-vito-001 --build-number=0.0.${{ github.run_number }}
          
        - name: Publish
-         run: jf npm publish --build-name=build-vito-001 --build-number=${{ github.run_number }}
+         run: jf npm publish
          
        - name: Publish Build info With JFrog CLI
          run: |
