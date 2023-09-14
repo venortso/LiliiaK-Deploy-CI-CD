@@ -4,35 +4,83 @@ on: push
 jobs:
   build:
      runs-on: ubuntu-latest
-       
+     env:
+      PACKAGE_NAME: 
+      PACKAGE_VERSION: 
      steps:
-       - name: Checkout
-         uses: actions/checkout@v3
-         
-       - name: Setup JFrog CLI
-         uses: jfrog/setup-jfrog-cli@v3
-         env:  
-           JF_URL: ${{ secrets.JF_URL }}
-           JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
-           
-       - name: Setup Node npm
-         uses: actions/setup-node@v3
-           
-       - name: Set CLI Config
-         run: jf npm-config --global=true --repo-resolve=vito-001-npm --repo-deploy=vito-001-npm
-           
-       - name: Install Deps
-         run: jf npm install --build-name=build-vito-001 --build-number=0.0.${{ github.run_number }}
-         
-       - name: Publish
-         run: jf npm publish
-         
-       - name: Publish Build info With JFrog CLI
-         run: |
-          # Collect environment variables for the build
-          jf rt build-collect-env
-          # Collect VCS details from git and add them to the build
-          jf rt build-add-git
-          # Publish build info
-          jf rt build-publish
+      - name: Checkout
+        uses: actions/checkout@v3
+        
+      - name: Setup JFrog CLI
+        uses: jfrog/setup-jfrog-cli@v3
+        env:  
+          JF_URL: ${{ secrets.JF_URL }}
+          JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
+          REPO_NAME: "vito-001-npm-local"
+          
+      - name: Setup Node npm
+        uses: actions/setup-node@v3
+          
+      - name: Set CLI Config
+        run: jf npm-config --global=true --repo-resolve=vito-001-npm --repo-deploy=vito-001-npm
+          
+      - name: Install Deps
+        run: jf npm install --build-name=build-vito-001 --build-number=0.0.${{ github.run_number }}
+        
+      - name: Publish
+        run: jf npm publish --build-name=build-vito-001 --build-number=0.0.${{ github.run_number }}
+        
+      - name: Publish Build info With JFrog CLI
+        run: |
+        # Collect environment variables for the build
+        jf rt build-collect-env
+        # Collect VCS details from git and add them to the build
+        jf rt build-add-git
+        # Publish build info
+        jf rt build-publish
+          
+      - name: Install jq
+        run: sudo apt-get install jq
+
+      - name: Extract Package Info
+        run: |
+          # Extract the package name and version using jq
+          PACKAGE_NAME=$(jq -r .name package.json)
+          PACKAGE_VERSION=$(jq -r .version package.json)
+
+      - name: Display Package Info
+        run: |
+          echo "Package Name: $PACKAGE_NAME"
+          echo "Package Version: $PACKAGE_VERSION"
       
+      - name: Set Package Info
+        run: |
+          echo "PACKAGE_NAME=$PACKAGE_NAME" >> $GITHUB_ENV
+          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
+
+      - name: Set Artifact Properties
+        run: |
+          # Define the Artifactory URL and repository name
+          ARTIFACTORY_URL="$JF_URL/artifactory"
+          
+          # Define the property to set
+          PROPERTY_NAME="PROPERTY1"
+          PROPERTY_VALUE="VALUE1"
+          
+          # Construct the URL for the PUT request
+          ARTIFACT_URL="${ARTIFACTORY_URL}/${REPO_NAME}/${PACKAGE_NAME}/-/${PACKAGE_NAME}-${PACKAGE_VERSION}.tgz?properties=${PROPERTY_NAME}=${PROPERTY_VALUE}"
+          
+          echo "Artifact URL: $ARTIFACT_URL"
+
+          # Use curl to make the PUT request with the access token in the header
+          HTTP_RESPONSE=$(curl -w "%{http_code}" -X PUT -H "Authorization: Bearer $JF_ACCESS_TOKEN" "$ARTIFACT_URL")
+          
+          # Check the HTTP response code
+          if [ "$HTTP_RESPONSE" -ge 200 ] && [ "$HTTP_RESPONSE" -lt 300 ]; then
+            echo "Artifact properties set successfully."
+          else
+            echo "Failed to set artifact properties. HTTP response code: $HTTP_RESPONSE"
+            exit 1 # Exit with a non-zero status code to fail the workflow
+          fi
+
+
