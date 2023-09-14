@@ -16,7 +16,7 @@ jobs:
         env:  
           JF_URL: ${{ secrets.JF_URL }}
           JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
-          REPO_NAME: "vito-001-npm-local"
+          
           
       - name: Setup Node npm
         uses: actions/setup-node@v3
@@ -42,19 +42,20 @@ jobs:
       - name: Install jq
         run: sudo apt-get install jq
 
-      - name: Extract Package Info
+      - name: Set Artifact Properties
         run: |
+          # Define the Artifactory URL and repository name
+          ARTIFACTORY_URL="${{ secrets.JF_URL }}/artifactory"
+
+          # Define the repository name
+          REPO_NAME: "vito-001-npm-local"
+
           # Extract the package name and version using jq
           PACKAGE_NAME=$(jq -r .name package.json)
           PACKAGE_VERSION=$(jq -r .version package.json)
           echo "Package Name: $PACKAGE_NAME"
           echo "Package Version: $PACKAGE_VERSION"
 
-      - name: Set Artifact Properties
-        run: |
-          # Define the Artifactory URL and repository name
-          ARTIFACTORY_URL="$JF_URL/artifactory"
-          
           # Define the property to set
           PROPERTY_NAME="PROPERTY1"
           PROPERTY_VALUE="VALUE1"
