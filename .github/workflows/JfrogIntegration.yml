@@ -62,7 +62,8 @@ jobs:
           
           # Construct the URL for the PUT request
           ARTIFACT_URL="${ARTIFACTORY_URL}/${REPO_NAME}/${PACKAGE_NAME}/-/${PACKAGE_NAME}-${PACKAGE_VERSION}.tgz?properties=${PROPERTY_NAME}=${PROPERTY_VALUE}"
-          
+          JF_ACCESS_TOKEN="${{ secrets.JF_ACCESS_TOKEN }}"
+
           echo "Artifact URL: $ARTIFACT_URL"
 
           # Use curl to make the PUT request with the access token in the header
