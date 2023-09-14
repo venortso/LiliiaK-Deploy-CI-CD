@@ -45,7 +45,7 @@ jobs:
       - name: Set Artifact Properties
         run: |
           # Define the Artifactory URL and repository name
-          ARTIFACTORY_URL="${{ secrets.JF_URL }}/artifactory"
+          ARTIFACTORY_URL="${{ secrets.JF_URL }}/artifactory/api/storage"
 
           # Define the repository name
           REPO_NAME="vito-001-npm-local"
@@ -70,8 +70,3 @@ jobs:
           HTTP_RESPONSE=$(curl -X PUT -H "Authorization: Bearer $JF_ACCESS_TOKEN" "$ARTIFACT_URL")
 
           echo "HTTP Response: $HTTP_RESPONSE"
-          
-          
-
-
-
