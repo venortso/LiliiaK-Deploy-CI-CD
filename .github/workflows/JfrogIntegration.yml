@@ -48,7 +48,7 @@ jobs:
           ARTIFACTORY_URL="${{ secrets.JF_URL }}/artifactory"
 
           # Define the repository name
-          REPO_NAME: "vito-001-npm-local"
+          REPO_NAME= "vito-001-npm-local"
 
           # Extract the package name and version using jq
           PACKAGE_NAME=$(jq -r .name package.json)
