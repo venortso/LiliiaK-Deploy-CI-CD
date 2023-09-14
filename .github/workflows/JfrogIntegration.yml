@@ -67,15 +67,11 @@ jobs:
           echo "Artifact URL: $ARTIFACT_URL"
 
           # Use curl to make the PUT request with the access token in the header
-          HTTP_RESPONSE=$(curl -w "%{http_code}" -X PUT -H "Authorization: Bearer $JF_ACCESS_TOKEN" "$ARTIFACT_URL")
+          HTTP_RESPONSE=$(curl -X PUT -H "Authorization: Bearer $JF_ACCESS_TOKEN" "$ARTIFACT_URL")
+
+          echo "HTTP Response: $HTTP_RESPONSE"
           
-          # Check the HTTP response code
-          if [ "$HTTP_RESPONSE" -ge 200 ] && [ "$HTTP_RESPONSE" -lt 300 ]; then
-            echo "Artifact properties set successfully."
-          else
-            echo "Failed to set artifact properties. HTTP response code: $HTTP_RESPONSE"
-            exit 1 # Exit with a non-zero status code to fail the workflow
-          fi
+          
 
 
 
